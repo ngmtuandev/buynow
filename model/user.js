@@ -27,17 +27,28 @@ const userChema = new mongoose.Schema(
       unique: true,
     },
     addres: {
-      type: mongoose.Types.ObjectId,
-      ref: "Address",
+      type: Array,
+      default: [],
     },
     role: {
       type: String,
       default: "user",
     },
-    cart: {
-      type: Array,
-      default: [],
-    },
+    cart: [
+      {
+        product: {
+          type: mongoose.Types.ObjectId,
+          ref: "Product",
+        },
+        quanlity: {
+          type: Number,
+          default: 0,
+        },
+        color: {
+          type: String,
+        },
+      },
+    ],
     whishlist: {
       type: mongoose.Types.ObjectId,
       ref: "Product",

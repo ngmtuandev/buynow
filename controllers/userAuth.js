@@ -197,6 +197,115 @@ const userController = {
       });
     }
   }),
+  updateAddress: asyncHandler(async (req, res) => {
+    const { id } = req.auth;
+    console.log("id >>>>>>>", id);
+    if (req.body.address) {
+      const newUserUpdated = await User.findByIdAndUpdate(
+        id,
+        {
+          $push: { addres: req.body.address },
+        },
+        { new: true }
+      );
+      if (newUserUpdated) {
+        return res.status(201).json({
+          status: 0,
+          mess: "Thêm địa chỉ người dùng thành công",
+          data: newUserUpdated,
+        });
+      }
+    }
+  }),
+  cartUser: asyncHandler(async (req, res) => {
+    const { id } = req.auth;
+    const { pid } = req.params;
+    const { quanlity, color } = req.body;
+    if (!quanlity || !color || !pid) {
+      return res.status(400).json({
+        status: 1,
+        mess: "bạn không được để trống",
+      });
+    } else {
+      const cartUserCurr = await User.findById(id).select("cart");
+      // console.log("cart user curent >>>>", cartUserCurr.cart);
+      const alreadyProduct = await cartUserCurr?.cart.find(
+        (item) => item?.product?.toString() === pid?.toString()
+        // console.log(
+        //   "item.product.toString() === pid.toString() >>>> ",
+        //   item.product.toString(),
+        //   pid,
+        //   item.product.toString() === pid.toString()
+        // )
+      );
+      // console.log("alreadyProduct >>>", alreadyProduct);
+      if (alreadyProduct) {
+        // console.log("alreadyProduct >>>>>>>", alreadyProduct);
+        // console.log(
+        //   " +alreadyProduct?.quanlity + +quanlity >>>>",
+        //   +alreadyProduct?.quanlity
+        // );
+        if (alreadyProduct?.color?.toString() === color?.toString()) {
+          // console.log(
+          //   "alreadyProduct?.color.toString() === color.toString()",
+          //   alreadyProduct?.color.toString() === color.toString()
+          // );
+          // console.log(
+          //   "Quanlity : >>>>>",
+          //   +alreadyProduct?.quanlity + +quanlity
+          // );
+          const addCart = await User.findByIdAndUpdate(
+            id,
+            {
+              cart: {
+                quanlity: +alreadyProduct?.quanlity + +quanlity,
+                color,
+                product: pid,
+              },
+            },
+            { new: true }
+          );
+          if (addCart) {
+            return res.status(201).json({
+              status: 0,
+              mess: "Thêm giỏ hàng thành công",
+              data: addCart,
+            });
+          }
+        } else {
+          const addCart = await User.findByIdAndUpdate(
+            id,
+            {
+              $push: { cart: { product: pid, color, quanlity } },
+            },
+            { new: true }
+          );
+          if (addCart) {
+            return res.status(201).json({
+              status: 0,
+              mess: "Thêm sản phẩm mới giỏ hàng thành công",
+              data: addCart,
+            });
+          }
+        }
+      } else {
+        const addCart = await User.findByIdAndUpdate(
+          id,
+          {
+            $push: { cart: { product: pid, color, quanlity } },
+          },
+          { new: true }
+        );
+        if (addCart) {
+          return res.status(201).json({
+            status: 0,
+            mess: "Thêm giỏ hàng thành công",
+            data: addCart,
+          });
+        }
+      }
+    }
+  }),
 };
 
 module.exports = userController;
