@@ -8,6 +8,9 @@ const categorySchema = new mongoose.Schema(
       index: true,
       unique: true,
     },
+    brand: {
+      type: Array,
+    },
   },
   {
     timestamps: true,

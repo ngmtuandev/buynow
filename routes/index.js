@@ -6,6 +6,7 @@ const blog = require("./blog");
 const brand = require("./brand");
 const coupon = require("./coupon");
 const order = require("./order");
+const insertData = require("./insertData");
 const initRoute = (app) => {
   app.use("/api/user", userRouter);
   app.use("/api/product", productRouter);
@@ -15,6 +16,7 @@ const initRoute = (app) => {
   app.use("/api/brand", brand);
   app.use("/api/coupon", coupon);
   app.use("/api/order", order);
+  app.use("/api/insert", insertData);
 };
 
 module.exports = initRoute;

@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema(
       lowercase: true,
     },
     desc: {
-      type: String,
+      type: Array,
       require: true,
     },
     brand: {
@@ -25,8 +25,8 @@ const productSchema = new mongoose.Schema(
       require: true,
     },
     category: {
-      type: mongoose.Types.ObjectId,
-      ref: "Category",
+      type: String,
+      require: true,
     },
     quantity: {
       type: Number,
@@ -41,7 +41,6 @@ const productSchema = new mongoose.Schema(
     },
     color: {
       type: String,
-      enum: ["xanh", "đen", "trắnng"],
     },
     ratings: [
       {
